@@ -6,7 +6,22 @@ from nltk.tokenize import word_tokenize
 import re
 from nltk.stem.snowball import SnowballStemmer
 
+def processText(text):
+    return re.sub(r'[^a-z]', ' ', text.lower())
+
+def tokenize(text):
+    return [stemmer.stem(word) for word in word_tokenize(text)]
+
 stemmer = SnowballStemmer('english')
+max_features = 20000
+ngram_range = (1,2)
+bagOfWord = CountVectorizer(
+    preprocessor = processText,
+    tokenizer= tokenize,
+    max_features = max_features,
+    ngram_range = ngram_range
+
+)
 
 def getData(dim = 12500):
     global ok
@@ -26,12 +41,6 @@ def getData(dim = 12500):
         n += 1
     return values
 
-def processText(text):
-    return re.sub(r'[^a-z]', ' ', text.lower())
-
-def tokenize(text):
-    return [stemmer.stem(word) for word in word_tokenize(text)]
-
 def splitDataLabels():
     """
         return data -> sentence and label
@@ -45,6 +54,12 @@ def splitDataLabels():
         data.append(j)
     return data,labels
 
-if __name__ == '__main__':
+def getMatrixValues():
     x,y = splitDataLabels()
-    print(x[:3],y[:3])
+    x = bagOfWord.fit_transform(x).toarray()
+    return x,y
+
+
+if __name__ == '__main__':
+    x, y = getMatrixValues()
+    print(x.shape)
