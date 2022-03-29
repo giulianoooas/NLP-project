@@ -1,6 +1,6 @@
 #dataset -> https://www.kaggle.com/datasets/kritanjalijain/amazon-reviews/code
 # mai exact datele de test, cele de traing erau prea multe :)
-
+from sklearn.preprocessing import normalize
 from sklearn.feature_extraction.text import CountVectorizer
 from nltk.tokenize import word_tokenize
 import re
@@ -15,6 +15,7 @@ def tokenize(text):
 stemmer = SnowballStemmer('english')
 max_features = 20000
 ngram_range = (1,2)
+norm = 'l2'
 bagOfWord = CountVectorizer(
     preprocessor = processText,
     tokenizer= tokenize,
@@ -56,10 +57,11 @@ def splitDataLabels():
 
 def getMatrixValues():
     x,y = splitDataLabels()
-    x = bagOfWord.fit_transform(x).toarray()
+    x = normalize(bagOfWord.fit_transform(x).toarray(),norm)
     return x,y
 
 
 if __name__ == '__main__':
     x, y = getMatrixValues()
     print(x.shape)
+    print(x[0])
