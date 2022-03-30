@@ -1,3 +1,6 @@
+Date de antrenare: 20000
+Date de testare: 5000
+
 ===============================================
 
     Linear SVC
